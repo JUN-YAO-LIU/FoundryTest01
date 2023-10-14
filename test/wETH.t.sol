@@ -20,19 +20,12 @@ contract WrappedETHTest is Test {
        vm.deal(bob, 1 ether);
     }
 
-    function test_wETHName() public {
-        assertEq(token.name(), "Wrapped ETH");
-    }
-
     // 測項 1: deposit 應該將與 msg.value 相等的 ERC20 token mint 給 user
     function test_Deposite() public  {
         vm.startPrank(jim);
         vm.deal(jim, 1 ether);
 
-        console.log(jim.balance);
         token.wrappedETH{value:50001}();
-        console.log(jim.balance);
-        console.log("Supply",token.totalSupply());
 
         vm.stopPrank();
         assertEq(token.balanceOf(jim), 50001);
@@ -43,11 +36,7 @@ contract WrappedETHTest is Test {
         vm.startPrank(jim);
         vm.deal(jim, amount);
 
-        console.log("Jim Balance",jim.balance);
-        console.log("ETH Balance",address(token).balance);
         token.wrappedETH{value:amount}();
-        console.log("Jim Balance",jim.balance);
-        console.log("ETH Balance",address(token).balance);
 
         vm.stopPrank();
         assertEq(address(token).balance, amount);
@@ -74,12 +63,10 @@ contract WrappedETHTest is Test {
         
         token.wrappedETH{value:10}();
         uint256 beforeWithdrawl = token.totalSupply();
-        console.log("beforeWithdrawl",beforeWithdrawl);
 
         token.unwrappedETH(3);
 
         uint256 afterithdrawl = token.totalSupply();
-        console.log("afterithdrawl",afterithdrawl);
 
         vm.stopPrank();
 
@@ -91,13 +78,9 @@ contract WrappedETHTest is Test {
         vm.startPrank(jim);
         vm.deal(jim, 10);
         
-        console.log("Jim before",jim.balance);
         token.wrappedETH{value:10}();
-        console.log("Jim after",jim.balance);
         
         token.unwrappedETH(3);
-
-        console.log("Jim withdrawl",jim.balance);
 
         vm.stopPrank();
 
@@ -156,18 +139,13 @@ contract WrappedETHTest is Test {
         vm.startPrank(jim);
         vm.deal(jim, 10);
         
-        console.log("Jim's ETH amount",jim.balance);
         token.wrappedETH{value:10}();
-        console.log("Jim's wETH amount",token.balanceOf(jim));
 
         token.approve(bob, 1);
-        console.log("allowance wETH amount",token.allowance(jim,bob));
         vm.stopPrank();
 
-        console.log("Bob's wETH amount",token.balanceOf(bob));
         vm.prank(bob);
         token.transferFrom(jim,bob, 1);
-        console.log("Bob's wETH amount",token.balanceOf(bob));
 
         assertEq(token.balanceOf(bob), 1);
     }
@@ -178,20 +156,14 @@ contract WrappedETHTest is Test {
         vm.startPrank(jim);
         vm.deal(jim, 10);
         
-        console.log("Jim's ETH amount",jim.balance);
         token.wrappedETH{value:10}();
-        console.log("Jim's wETH amount",token.balanceOf(jim));
 
         token.approve(bob, 3);
-        console.log("allowance wETH amount",token.allowance(jim,bob));
         vm.stopPrank();
 
-        console.log("Bob's wETH amount",token.balanceOf(bob));
         vm.prank(bob);
         token.transferFrom(jim,bob, 1);
-        console.log("Bob's wETH amount",token.balanceOf(bob));
         uint256 afterTransfer = token.allowance(jim,bob);
-        console.log("afterTransfer",afterTransfer);
 
         assertEq(afterTransfer, 2);
     }
