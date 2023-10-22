@@ -39,7 +39,7 @@ contract PuPuERC721 is ERC721 {
 
     // 3. The NFT Image is always the same,
     function tokenURI(uint256 tokenId) public view override returns (string memory) {
-        _requireOwned(tokenId);
+        // _requireOwned(tokenId);
         return baseUri;
     }
 }
